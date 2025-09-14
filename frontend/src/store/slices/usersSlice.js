@@ -77,6 +77,21 @@ export const deleteUser = createAsyncThunk(
   }
 );
 
+export const createUser = createAsyncThunk(
+  'users/createUser',
+  async (userData, { rejectWithValue }) => {
+    try {
+      const response = await userService.createUser(userData);
+      toast.success('User created successfully!');
+      return response.data.user;
+    } catch (error) {
+      const message = error.response?.data?.message || 'Failed to create user';
+      toast.error(message);
+      return rejectWithValue(message);
+    }
+  }
+);
+
 const initialState = {
   users: [],
   stats: null,
@@ -179,6 +194,22 @@ const usersSlice = createSlice({
         }
       })
       .addCase(deleteUser.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+      })
+      
+      // Create User
+      .addCase(createUser.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(createUser.fulfilled, (state, action) => {
+        state.isLoading = false;
+        const newUser = action.payload;
+        state.users.push(newUser);
+        state.totalUsers += 1;
+      })
+      .addCase(createUser.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload;
       });

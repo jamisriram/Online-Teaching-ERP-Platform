@@ -31,6 +31,15 @@ const userService = {
   },
 
   /**
+   * Create new user
+   * @param {Object} userData - User data
+   * @returns {Promise} API response
+   */
+  createUser: async (userData) => {
+    return await api.post('/users', userData);
+  },
+
+  /**
    * Update user
    * @param {number} userId - User ID
    * @param {Object} userData - Updated user data

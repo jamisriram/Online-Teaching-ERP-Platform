@@ -19,6 +19,13 @@ const { validateUserUpdate } = require('../middleware/validation');
 router.get('/students', authenticateToken, requireTeacher, UserController.getStudents);
 
 /**
+ * @route   POST /api/users
+ * @desc    Create new user
+ * @access  Private (admin only)
+ */
+router.post('/', authenticateToken, requireAdmin, UserController.createUser);
+
+/**
  * @route   GET /api/users
  * @desc    Get all users
  * @access  Private (admin only)

@@ -7,6 +7,63 @@ const bcrypt = require('bcrypt');
  */
 class UserController {
   /**
+   * Create new user (admin only)
+   * @param {Object} req - Express request object
+   * @param {Object} res - Express response object
+   */
+  static async createUser(req, res) {
+    try {
+      const { name, email, password, role = 'student' } = req.body;
+
+      // Validate required fields
+      if (!name || !email || !password) {
+        return res.status(400).json({
+          error: 'Missing required fields',
+          message: 'Name, email, and password are required'
+        });
+      }
+
+      // Check if user already exists
+      const existingUser = await User.findByEmail(email);
+      if (existingUser) {
+        return res.status(400).json({
+          error: 'User already exists',
+          message: 'A user with this email already exists'
+        });
+      }
+
+      // Hash password
+      const saltRounds = 10;
+      const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+      // Create user
+      const newUser = await User.create({
+        name,
+        email,
+        password: hashedPassword,
+        role
+      });
+
+      res.status(201).json({
+        message: 'User created successfully',
+        user: {
+          id: newUser.id,
+          name: newUser.name,
+          email: newUser.email,
+          role: newUser.role,
+          created_at: newUser.created_at
+        }
+      });
+    } catch (error) {
+      console.error('Create user error:', error);
+      res.status(500).json({
+        error: 'Failed to create user',
+        message: 'An error occurred while creating the user'
+      });
+    }
+  }
+
+  /**
    * Get all users (admin only) or users by role (teacher/admin)
    * @param {Object} req - Express request object
    * @param {Object} res - Express response object

@@ -1,9 +1,13 @@
 import React, { useEffect } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Link, useLocation } from 'react-router-dom';
 import { Container, Row, Col, Card, Nav } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import Header from '../components/Header';
 import LoadingSpinner from '../components/LoadingSpinner';
+import UserManagement from '../components/UserManagement';
+import SessionManagement from '../components/SessionManagement';
+import AttendanceReports from '../components/AttendanceReports';
+import AnalyticsDashboard from '../components/AnalyticsDashboard';
 import { fetchUsers, fetchUserStats } from '../store/slices/usersSlice';
 
 /**
@@ -12,6 +16,7 @@ import { fetchUsers, fetchUserStats } from '../store/slices/usersSlice';
  */
 const AdminDashboard = () => {
   const dispatch = useDispatch();
+  const location = useLocation();
   const { user } = useSelector((state) => state.auth);
   const { stats, isLoading } = useSelector((state) => state.users);
 
@@ -125,34 +130,46 @@ const AdminDashboard = () => {
                     <Row>
                       <Col md={3} sm={6} className="mb-3">
                         <div className="d-grid">
-                          <button className="btn quick-action-btn p-3">
+                          <Link 
+                            to="/admin/users"
+                            className="btn quick-action-btn p-3 text-decoration-none"
+                          >
                             <i className="bi bi-person-plus d-block mb-2" style={{ fontSize: '2rem' }}></i>
-                            <span>Add User</span>
-                          </button>
+                            <span>Manage Users</span>
+                          </Link>
                         </div>
                       </Col>
                       <Col md={3} sm={6} className="mb-3">
                         <div className="d-grid">
-                          <button className="btn quick-action-btn p-3">
+                          <Link 
+                            to="/admin/sessions"
+                            className="btn quick-action-btn p-3 text-decoration-none"
+                          >
                             <i className="bi bi-calendar-plus d-block mb-2" style={{ fontSize: '2rem' }}></i>
-                            <span>Create Session</span>
-                          </button>
+                            <span>Manage Sessions</span>
+                          </Link>
                         </div>
                       </Col>
                       <Col md={3} sm={6} className="mb-3">
                         <div className="d-grid">
-                          <button className="btn quick-action-btn p-3">
+                          <Link 
+                            to="/admin/attendance"
+                            className="btn quick-action-btn p-3 text-decoration-none"
+                          >
                             <i className="bi bi-bar-chart d-block mb-2" style={{ fontSize: '2rem' }}></i>
                             <span>View Reports</span>
-                          </button>
+                          </Link>
                         </div>
                       </Col>
                       <Col md={3} sm={6} className="mb-3">
                         <div className="d-grid">
-                          <button className="btn quick-action-btn p-3">
-                            <i className="bi bi-gear d-block mb-2" style={{ fontSize: '2rem' }}></i>
-                            <span>Settings</span>
-                          </button>
+                          <Link 
+                            to="/admin/analytics"
+                            className="btn quick-action-btn p-3 text-decoration-none"
+                          >
+                            <i className="bi bi-graph-up d-block mb-2" style={{ fontSize: '2rem' }}></i>
+                            <span>Analytics</span>
+                          </Link>
                         </div>
                       </Col>
                     </Row>
@@ -214,23 +231,43 @@ const AdminDashboard = () => {
           {/* Sidebar */}
           <Col md={2} className="sidebar">
             <Nav className="flex-column p-3">
-              <Nav.Link href="/admin" className="active">
+              <Nav.Link 
+                as={Link} 
+                to="/admin" 
+                className={location.pathname === '/admin' ? 'active' : ''}
+              >
                 <i className="bi bi-speedometer2 me-2"></i>
                 Dashboard
               </Nav.Link>
-              <Nav.Link href="/admin/users">
+              <Nav.Link 
+                as={Link} 
+                to="/admin/users"
+                className={location.pathname === '/admin/users' ? 'active' : ''}
+              >
                 <i className="bi bi-people me-2"></i>
                 User Management
               </Nav.Link>
-              <Nav.Link href="/admin/sessions">
+              <Nav.Link 
+                as={Link} 
+                to="/admin/sessions"
+                className={location.pathname === '/admin/sessions' ? 'active' : ''}
+              >
                 <i className="bi bi-calendar-week me-2"></i>
                 Session Management
               </Nav.Link>
-              <Nav.Link href="/admin/attendance">
+              <Nav.Link 
+                as={Link} 
+                to="/admin/attendance"
+                className={location.pathname === '/admin/attendance' ? 'active' : ''}
+              >
                 <i className="bi bi-check-circle me-2"></i>
                 Attendance Reports
               </Nav.Link>
-              <Nav.Link href="/admin/analytics">
+              <Nav.Link 
+                as={Link} 
+                to="/admin/analytics"
+                className={location.pathname === '/admin/analytics' ? 'active' : ''}
+              >
                 <i className="bi bi-bar-chart me-2"></i>
                 Analytics
               </Nav.Link>
@@ -241,10 +278,10 @@ const AdminDashboard = () => {
           <Col md={10} className="main-content">
             <Routes>
               <Route path="/" element={<DashboardOverview />} />
-              <Route path="/users" element={<div className="p-4"><h3>User Management (Coming Soon)</h3></div>} />
-              <Route path="/sessions" element={<div className="p-4"><h3>Session Management (Coming Soon)</h3></div>} />
-              <Route path="/attendance" element={<div className="p-4"><h3>Attendance Reports (Coming Soon)</h3></div>} />
-              <Route path="/analytics" element={<div className="p-4"><h3>Analytics (Coming Soon)</h3></div>} />
+              <Route path="/users" element={<UserManagement />} />
+              <Route path="/sessions" element={<SessionManagement />} />
+              <Route path="/attendance" element={<AttendanceReports />} />
+              <Route path="/analytics" element={<AnalyticsDashboard />} />
             </Routes>
           </Col>
         </Row>
