@@ -2,7 +2,7 @@
   "name": "online-teaching-erp-frontend",
   "version": "1.0.0",
   "description": "Frontend for Online Teaching ERP platform",
-  "homepage": ".",
+  "homepage": "/",
   "private": true,
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.5",
